@@ -1,0 +1,189 @@
+<?php 
+$colclass = 'col-lg-12 col-md-12 col-sm-12 col-xs-12';
+?>
+
+<form method="post" id="conceptForm">
+<input type="hidden" name="focusOn" value="child"/>
+	<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+<h4><strong>Concept #<?php print $this->itemOf('concept','id');?></strong>
+	<div class="btn-toolbar <?php print ($this->get('viewas','') == 'table' ? 'pull-right' : ''); ?>" role="toolbar">
+	<div class="btn-group btn-group btn-group-xs" role="group">
+		<?php if($this->get('canWrite',FALSE)): ?>
+		<button class="btn btn-success" name="action" value="postconcept"
+			type="submit">
+			<span class="glyphicon glyphicon-save"></span> Save
+		</button>
+		<?php endif;?>
+		<?php if(isset($nodelete) && $nodelete):
+			// do nothing
+		?>
+		<?php elseif($this->get('canWrite', FALSE)): ?>
+		<button class="btn btn-danger" name="action" value="trashconcept" type="submit">
+			<span class="glyphicon glyphicon-trash"></span> Delete
+		</button>
+		<?php endif; ?>
+		<button type="button" class="btn btn-default"
+			onclick="window.location.href='<?php print route('taxonomies', $this->get('action') == 'taxonomy' ? 'lattice' : 'taxonomy' , array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$this->itemOf('concept','id')));?>';">
+			<span
+				class="glyphicon glyphicon-<?php print  $this->get('action') == 'taxonomy' ? 'picture' : 'list' ;?>"></span>
+		<?php print  $this->get('action') == 'taxonomy' ? 'in lattice' : 'in list' ;?></button>
+		<button type="button" class="btn btn-default"
+			onclick="window.location.href='<?php print route('taxonomies', $this->get('action') , array('taxonomy'=>$this->itemOf('taxonomy', 'id')));?>';">
+			<span class="glyphicon glyphicon-remove"></span> Close
+		</button>
+	</div></div></h4>
+</div></div>
+	<input type="hidden" name="controller" value="taxonomies" /> <input
+		type="hidden" name="returnToAction"
+		value="<?php print $this->get('action');?>" /> <input id="id"
+		name="id" type="hidden"
+		value="<?php print $this->itemOf('concept','id');?>" />
+
+	<?php
+	// Prepare extent and intent
+	if(strlen($this->itemOf ( 'concept', 'extent' )) > 0){
+		$extent = explode ( ",", $this->itemOf ( 'concept', 'extent' ) );
+	}else{
+		$extent = array();
+	}
+	if(strlen($this->itemOf ( 'concept', 'intent' )) > 0){
+		$intent = explode ( ",", $this->itemOf ( 'concept', 'intent' ) );
+	}else{
+		$intent = array();
+	}
+	$properExtent = $this->itemOf('concept', 'properExtent');
+	$properIntent = $this->itemOf('concept', 'properIntent');
+	$inheritedExtent = $this->itemOf('concept', 'inheritedExtent');
+	$inheritedIntent = $this->itemOf('concept', 'inheritedIntent');
+	
+	?>
+	
+	<div class="row">
+	<div class="<?php print $colclass;?> ">
+		<div class="siblings_link btn-group btn-group-sm">
+	<?php if($this->itemOf('concept', 'top')): ?>
+	
+	<?php
+		$first = true;
+		?>
+	<?php foreach($this->itemOf('concept', 'top') as $top):?>
+		<?php
+			($first) ? $first = false : print '';
+			?><a class="btn btn-default" href="<?php print route('taxonomies', $this->get('action'), array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$top['id'] ));?>">
+			<span class="glyphicon glyphicon-arrow-up"></span>
+			<?php print $top['name'] ? $top['name'] : '#' . $top['id'];?></a>
+	<?php endforeach; ?>
+	<?php else: $nodelete = TRUE; ?>
+	<?php endif; ?>
+
+		</div>
+	</div>
+	
+	</div>
+	
+	
+	<div class="row">
+	<div class="<?php print $colclass;?>">
+	<label for="name">Name</label> <input class="form-control" id="name"
+		name="name" type="text"
+		value="<?php print $this->itemOf('concept','name');?>" />
+		</div>
+	<div class="<?php print $colclass;?>">
+		 <label
+		for="comment">Comment</label>
+	<textarea class="form-control" id="comment" name="comment"><?php print $this->itemOf('concept','comment');?></textarea>
+	</div></div>
+	<div class="row">
+	<div class="<?php print $colclass;?>">
+	<label for="intent">Intent</label>
+	<div class="taxbox" id="intent">
+		<?php $this->partial('ul-selectable', array('proper' => $properIntent, 'inherited' => $inheritedIntent)); ?>
+	</div>
+	<div class="features_stats">
+		<small><span id="intent_proper_no"><?php print count($properIntent); ?></span> proper</small> |
+		<small><span id="intent_inherited_no"><?php print count($inheritedIntent); ?></span> inerhited</small> |
+		<small><span id="intent_selected_no">0</span> highlighted</small>
+	</div></div>
+	<div class="<?php print $colclass;?>">
+	<label for="extent">Extent</label>
+	<div class="taxbox" id="extent">
+		<?php $this->partial('ul-selectable', array('proper' => $properExtent, 'inherited' => $inheritedExtent)); ?>
+	</div>
+	<div class="features_stats">
+		<small><span id="extent_proper_no"><?php print count($properExtent); ?></span> proper</small> |
+		<small><span id="extent_inherited_no"><?php print count($inheritedExtent); ?></span> inerhited</small> |
+		<small><span id="extent_selected_no">0</span> highlighted</small>
+	</div>
+	</div></div>
+	
+	<div class="row high">
+	<div class="<?php print $colclass;?>">
+	<div class="siblings_link btn-group btn-group-sm">
+	<?php if($this->itemOf('concept', 'bottom')): ?>
+	<?php $first = true; ?>
+	<?php foreach($this->itemOf('concept', 'bottom') as $bot):?>
+		<?php ($first) ? $first=false : print ''; ?>
+		<a class="btn btn-default" href="<?php print route('taxonomies', $this->get('action'), array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$bot['id'] ));?>">
+	<span class="glyphicon glyphicon-arrow-down"></span>
+		#<?php print $bot['name']?$bot['name']:$bot['id'];?></a>
+	<?php endforeach; ?>
+	<?php else: $nodelete = TRUE; ?>
+	<?php endif;?>
+	</div>	
+	</div>
+	</div>
+	
+</form>
+<script>
+$(document).ready(function(){
+	$("ul.selectable li").click(function(){
+		$(this).toggleClass('selected');
+		if (typeof highlightRelatedConcept === "function") {
+			var extent=[],intent=[];
+			$('#extent ul.selectable li.selected').each(function(ix, li){
+				extent.push($(li).html());
+			});
+			
+			$('#intent ul.selectable li.selected').each(function(ix, li){
+				intent.push($(li).html());
+			}); 
+		    // safe to use the function
+		    highlightRelatedConcept(extent,intent);
+		    $('#extent_selected_no').html(extent.length);
+		    $('#intent_selected_no').html(intent.length);
+		}
+	});
+});
+</script>
+<style>
+.selectable {
+	cursor: pointer;
+}
+.selectable li:hover {
+	background-color: #eee; /*#fcc;*/
+}
+
+.selectable li.selected {
+	background-color: #FFCF44; /*#fcc;*/
+}
+.selectable li.selected:hover {
+	background-color: #EEDE33; /*#fcc;*/
+}
+
+.selectable .proper {
+	background-color: #CFC;
+}
+.selectable .proper:hover {
+	background-color: #AFA;
+}
+
+.features_stats {
+	
+}
+
+.siblings_link{
+	margin-top: 5px;
+}
+</style>

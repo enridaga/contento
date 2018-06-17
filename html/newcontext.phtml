@@ -1,0 +1,42 @@
+<form method="post" class="panel panel-default" action="?">
+<input type="hidden" name="controller" value="contexts"/>
+<input type="hidden" name="action" value="postcontext"/>
+<div class="panel-heading">New context</div>
+<!-- 		<div class="panel-body"></div> -->
+		<ul class="list-group">
+			<li class="list-group-item">
+				<div class="input-group">
+<label class="input-group-addon" for="name">Name</label>
+<input class="form-control"  type="text" name="name" value="<?php print $this->get('name','');?>" /></div>
+</li>
+		<li class="list-group-item">
+			<div class="input-group">
+				<label class="input-group-addon" for="name">Description</label> <textarea
+					class="form-control" name="description"><?php print $this->get('description','');?></textarea>
+			</div>
+		</li>
+
+			<li class="list-group-item">
+				<div class="input-group">
+<label class="input-group-addon" for="name">Objects</label>
+<select class="form-control"  name="objects">
+<?php foreach($this->get('types', array()) as $type ) : ?>
+	<option value="<?php print $type['id']; ?>"><?php print $type['name']; ?></option>
+<?php endforeach; ?>
+</select></div>
+</li>
+
+			<li class="list-group-item">
+				<div class="input-group">
+<label class="input-group-addon" for="name">Attributes</label>
+<select class="form-control"  name="attributes">
+<?php foreach($this->get('types', array()) as $type ) : ?>
+	<option value="<?php print $type['id']; ?>"><?php print $type['name']; ?></option>
+<?php endforeach; ?>
+</select></div>
+</li>
+			<li class="list-group-item">
+				<div class="input-group">
+<button  class="btn btn-default" type="submit">Submit</button></div> 
+</li></ul>
+</form>

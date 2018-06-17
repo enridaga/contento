@@ -1,0 +1,163 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->
+	<div class="panel-heading">
+	<div class="row">
+	<strong class="col-lg-8"><?php print $this->itemOf('taxonomy', 'name'); ?> (<?php print count($this->get('concepts', array())); ?> concepts)</strong>
+	
+	
+	<div class="col-lg-4 " role="group">
+	
+	<div class="btn-toolbar" role="toolbar">
+<?php 
+$params = array('taxonomy'=>$this->itemOf('taxonomy', 'id')); 
+if($this->has('concept')){
+	$params['concept'] = $this->itemOf('concept','id');
+}
+unset($params); ?>
+	</div>
+	</div>
+	</div>
+	</div>
+	<?php if($this->get('viewas') == 'lattice2'): ?>
+			
+	<div class="panel-body">
+	<?php $this->partial('lattice2', array(
+			'taxonomy' => $this->get('taxonomy'),
+			'concept' => $this->get('concept'),
+			'action' => $this->get('action'),
+			'viewas' => 'lattice',
+			'canWrite' => $this->get('canWrite', FALSE)
+	));?>
+	</div>
+	<?php endif; ?>
+	
+	
+	<?php if($this->get('viewas') == 'table'):?>
+	<!-- Table -->
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Concept ID</th>
+				<th>Name</th>
+				<th>Intent</th>
+				<th>Extent</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach( $this->get('concepts') as $concept ): ?>
+			<?php if($this->has('concept') && $this->itemOf('concept', 'id') == $concept['id']): ?>
+			<tr
+			class="row-selected" id="conceptTr"
+			><td colspan = "5" class = "conceptTd">
+			<?php $this->partial('concept', array(
+				'taxonomy' => $this->get('taxonomy'),
+				'concept' => $this->get('concept'),
+				'action' => $this->get('action'),
+				'viewas' => 'table',
+				'canWrite' => $this->get('canWrite', FALSE))); ?>
+				</td></tr>
+			<?php else: ?>			
+			<tr class="concept" id="concept_<?php print $concept['id'];?>" data-extent="<?php print $concept['extent']; ?>" data-intent="<?php print $concept['intent']; ?>">
+				<td>#<?php print $concept['id']; ?></td>
+				<td><a href="<?php print route('taxonomies', 'taxonomy', array('taxonomy' => $this->itemOf('taxonomy', 'id'), 'concept' => $concept['id'])); ?>"><?php print ($concept['name']) ? $concept['name'] : 'No name'; ?></a>
+				<br/>
+				<small><?php print $concept['comment']; ?></small>
+				</td>
+				<?php 
+				$intent = explode(",",$concept['intent']);
+				if(count($intent) == 1){
+					if($intent[0] == ''){
+						unset($intent[0]);
+					}
+				}
+				$extent = explode(",",$concept['extent']);
+				if(count($extent) == 1){
+					if($extent[0] == ''){
+						unset($extent[0]);
+					}
+				}
+				?>
+				<td>
+					<a data-toggle="collapse" data-parent="#panel_int_<?php print $concept['id']; ?>" href="#panel_int_<?php print $concept['id']; ?>"><?php print count($intent); ?> attributes</a>
+					<div class="taxbox collapse" id="panel_int_<?php print $concept['id']; ?>">
+						<ul class="features intent"><li><?php print implode('</li><li>', $intent); ?></li></ul>
+					</div>
+				</td>
+				<td><a data-toggle="collapse" data-parent="#panel_ext_<?php print $concept['id']; ?>" href="#panel_ext_<?php print $concept['id']; ?>"><?php print count($extent); ?> objects</a>
+					<div class="taxbox collapse" id="panel_ext_<?php print $concept['id']; ?>"><ul class="features extent"><li><?php print implode("</li><li>", $extent); ?></li></ul></div></td>
+				<td>
+				<?php ?>
+				<div class="btn-group btn-group-sm">
+			<button type="button" class="btn btn-default"
+			onclick="window.location.href='<?php print route('taxonomies', 'taxonomy' , array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$concept['id']));?>';">
+			<span class="glyphicon glyphicon-list"></span> in list</button>
+			<button type="button" class="btn btn-default"
+			onclick="window.location.href='<?php print route('taxonomies', 'lattice', array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$concept['id']));?>';">
+			<span class="glyphicon glyphicon-picture"></span> in lattice</button>
+				<?php 
+				if(!$concept['bottom'] || !$concept['top']):
+				elseif($this->get('canWrite', FALSE)): ?>
+		<button class="btn btn-danger" 
+		onclick="window.location.href='<?php print route('taxonomies', 'trashconcept', array('taxonomy'=>$this->itemOf('taxonomy', 'id'), 'concept'=>$concept['id'], 'returnToAction' => 'taxonomy', 'focusOn' => 'none'));?>';"
+		type="button">
+			<span class="glyphicon glyphicon-trash"></span> Delete
+		</button>
+		<?php endif; ?>
+				</div>
+				</td>
+			</tr>
+			<?php unset($intent, $extent); ?>
+			<?php endif; ?>
+			
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+	
+<script>
+// scroll to conceptTr
+$(document).ready(function(){
+	if($("#conceptTr").offset()){
+		$('html,body').animate({
+		   scrollTop: $("#conceptTr").offset().top - 100
+		});
+	}
+});
+function highlightRelatedConcept(extent, intent){
+	console.log(extent.length,intent.length);
+	if(extent.length === 0 && intent.length === 0) {
+		$("tr").removeClass("highlighted");
+		return;
+ 	}
+	function arrayContainsAnotherArray(needle, haystack){
+		  for(var i = 0; i < needle.length; i++){
+		    if(haystack.indexOf(needle[i]) === -1)
+		       return false;
+		  }
+		  return true;
+		}
+	$("tr.concept").each(function(ix, con){
+		var cext = $(con).data('extent').split(',');
+		var cint = $(con).data('intent').split(',');
+		var isext = arrayContainsAnotherArray(extent,cext);
+		var isint = arrayContainsAnotherArray(intent,cint);
+		if(isext && isint){
+			// highlight
+			$(con).addClass("highlighted");
+		}else{
+			// not highlight
+			$(con).removeClass("highlighted");
+		}
+	});
+}
+	</script>
+	<style>
+table tr.highlighted{
+	background-color: rgb(255,215,75);
+}
+table tr.highlighted:hover{
+	background-color: rgb(255,200,60);
+}
+	</style>
+	<?php endif; ?>
+</div>

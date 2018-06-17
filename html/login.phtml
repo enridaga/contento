@@ -1,0 +1,25 @@
+<div  class="well">
+<form method="post" style="margin:0px auto;" id="loginForm">		
+	<div class="input-group">
+		<label for="username">Username</label>
+		<input class="form-control" id="username" name="username" type="text" value =""/>
+	</div>
+	<p></p>
+	<div class="input-group">
+		<label for="password">Password</label>
+		<input class="form-control" id="password" name="password" type="password" value=""/>
+	</div>
+</form>
+<form method="post" id="tryForm">		
+	<input class="form-control" id="username" name="username" type="hidden" value ="demo1"/>
+	<input class="form-control" id="password" name="password" type="hidden" value="demo1"/>	
+</form>
+
+</div>
+
+
+	<button class="btn btn-primary btn-lg justify" style="width:100%" type="button" onclick="$('#loginForm').submit();">Login</button>
+	
+	<p></p>
+	
+	<button class="btn btn-danger btn-lg" type="button"  style="width:100%" onclick="$('#tryForm').submit();">Just try</button>

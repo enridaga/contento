@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->
+	<div class="panel-heading">Taxonomies</div>
+	<div class="panel-body">
+		<p>List of taxonomies</p>
+	</div>
+	<!-- Table -->
+	<table class="table">
+<!-- 		<thead> -->
+			<tr>
+				<th>Taxonomy</th>
+				<th>Name</th>
+				<th>Concepts</th>
+			</tr>
+<!-- 		</thead> -->
+<!-- 		<tbody> -->
+			<?php foreach($this->get('taxonomies') as $taxonomy ): ?>
+			<tr>
+				<td>
+				<strong>
+				#<?php print $taxonomy['id']; ?></strong>
+				<?php if(isset($taxonomy['writable'])): ?>
+				<?php if($taxonomy['writable']):?>
+				<span class="label label-success">editable</span>
+				<?php else: ?>
+				<span class="label label-warning">
+				read-only</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				</td>
+				<td>
+				<a
+					href="<?php print route('taxonomies', 'taxonomy', array('taxonomy' => $taxonomy['id'])); ?>"><?php print $taxonomy['name']; ?>
+				</a></td>
+				<td><?php print $taxonomy['concepts']; ?></td>
+			</tr>
+			<?php endforeach; ?>
+<!-- 		</tbody> -->
+	</table>
+</div>

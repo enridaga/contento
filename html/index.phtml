@@ -1,0 +1,40 @@
+<div class="jumbotron welcome">
+	<h1>Welcome, <?php print $this->itemOf('user', 'name');?>!</h1>
+	<p></p>
+	<p><em>Contento</em> is a tool for bottom-up ontology drafting</p>
+	
+	
+	<p>What you can do with it:</p>
+	<ul>
+	<li><a 
+			href="<?php print route('items'); ?>">Items</a> are collections of things, that can be either objects or attributes.</li>
+	<li>Each <a
+			href="<?php print route('contexts'); ?>" >
+			context</a> represents a relation between objects and attributes, that might or might not occur.
+	<ul>
+			<li>Create a context by associating two collections, one as <i>objects</i> and the other as <i>attributes</i></li>
+			<li>Curate the context by marking when such a relation actually holds.</li> 
+			<li>You can also export and import contexts in CSV.
+			</li>
+			</ul></li>
+	
+	<li>Generate a concept lattice from the context, and curate the <a 
+			href="<?php print route('taxonomies'); ?>">taxonomy</a> of concepts annotating and pruning.</li>
+	<li>Export the information as OWL ontology, and go ahead with your favourite OWL editor!</li>
+	</ul>
+	
+	<br/>
+	<p>
+		 <a class="btn btn-primary btn-lg"
+			href="<?php print route('items'); ?>" role="button">Browse items</a>
+			 <a class="btn btn-primary btn-lg"
+			href="<?php print route('contexts'); ?>" role="button">Browse
+			contexts</a>
+			
+			
+			<a class="btn btn-primary btn-lg"
+			href="<?php print route('taxonomies'); ?>" role="button">Browse
+			taxonomies</a>
+	</p>
+</div>
+

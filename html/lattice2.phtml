@@ -1,0 +1,324 @@
+
+<div class="row" id="conceptTr">
+<?php if($this->full('concept') ): ?>
+			<div id="conceptBox" class="conceptBox col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+			<?php $this->partial('concept', array(
+				'taxonomy' => $this->get('taxonomy'),
+				'concept' => $this->get('concept'),
+				'action' => $this->get('action'),
+				'canWrite' => $this->get('canWrite', FALSE)
+				)); ?>
+</div>
+			<div id="vis" class="col-lg-8 col-md-8 col-sm-12 col-xs-12"></div>
+			
+<?php else: ?>	
+<div id="vis"></div>
+<?php endif; ?>
+</div>
+<script src="<?php print route('resources','js',array('name'=>'cola.v3.min.js'));?>"></script>
+<script>
+var lattice = {};
+// FIXME remove reference to base path...
+ d3.json("/contento/<?php print route('taxonomies', 'd3input', array('taxonomy' => $this->itemOf('taxonomy','id')));?>", function(error, json) {
+
+		//var width = 960, height = 1000, n = 10000;
+ 		var width = 1200, height = 700, n = 10000;
+ 
+		var selectedConcept = '<?php print $this->itemOf('concept','id'); ?>';
+		 
+        var svg = d3.select('#vis').append('svg').attr('width', width).attr('height', height);
+
+        var force = cola.d3adaptor()
+                        .linkDistance(100)
+                        .symmetricDiffLinkLengths(20)
+                        .avoidOverlaps(true)
+                        .size([width, height])
+                        .nodes(json.nodes)
+                        .links(json.links)
+                        .flowLayout("y", 10) //25
+                        .on("tick", tick)
+                        .start();
+
+        // Addthe lines first so they appear below the nodes
+        var link = svg.selectAll("line.link")
+			        .data(json.links)
+			      .enter().append("line")
+			        .attr("id", function(n){
+			            n.svg = this;
+			            	return 'link_' + n.source.id + '_' + n.target.id;
+			           })
+						.attr("data-source", function(n){
+			            	return n.source.id;
+			           })
+						.attr("data-target", function(n){
+			            	return n.target.id;
+			           })
+			      .attr("class", "link");
+	    var selectedNode = null;
+        var node = svg.selectAll("circle.node")
+                       .data(json.nodes)
+                     .enter().append("svg:a")
+                     .attr("xlink:href", function(d){
+                    	 var go = "<?php print route('taxonomies', 'lattice',  array('taxonomy' => $this->itemOf('taxonomy','id'), 'concept' => 'XXX' ));?>";
+             			go=go.replace('XXX', d.id);
+						return go;
+                     }).append("circle")
+                       .attr("class", "node")
+                       .attr("id", function(n){
+                            n.circle = this;
+                            if(n.id == selectedConcept){
+								selectedNode = n; // remember the focus node
+                            }
+                           	return 'node_' + n.id;
+                          })
+                       .attr("data-id", function(n){
+                           	return n.id;
+                          })               
+                       .attr("r", 6)
+                       .on("mouseover",highlight_node_links)
+                       .on("mouseout",highlight_node_links)
+                        //.on("click",fix_highlight)
+        			   ;
+        
+        var text = svg.selectAll("text.label")
+                       .data(json.nodes)
+                     .enter().append("text")
+                       .attr("class", "label")
+						.attr("id", function(n){
+                            n.text = this;
+                           	return 'text_' + n.id;
+                          })
+                       .text(function(d) { return d.name; });
+
+        
+
+        function tick() {
+            link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node.attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+
+            text.attr("x", function(d) { return d.x + 8; })
+                .attr("y", function(d) { return d.y; });
+        }
+
+//         function getRandomColor() {
+//             var letters = '0123456789ABCDEF'.split('');
+//             var color = '#';
+//             for (var i = 0; i < 6; i++ ) {
+//                 color += letters[Math.floor(Math.random() * 16)];
+//             }
+//             return color;
+//         }
+
+        function highlight_node_links(n,i){
+        	  var activate = false;
+        	  if(d3.select(this).attr("data-active") == "1" ){
+        	    d3.select(this).attr("data-active","0");
+        	    activate = false;
+        	  }else{
+        	    d3.select(this).attr("data-active","1");
+        	    activate = true;
+        	  }
+        	  var nid = 'node_' + n.id;
+        	  ;;(activate) ? classOn(nid, 'selected') : classOff(nid, 'selected');
+        	  highlight_path(n, 'top', 'selectedTop', activate);
+        	  highlight_path(n, 'bottom', 'selectedBottom', activate);
+        }
+
+		
+  	  function highlight_path(n, versus, clazz, activate){
+  		 var remainingNodes=[],
+	      nextNodes=[],
+	      first=true;
+      	  function mklinkid(vs, n1, n2){
+              if(vs == 'top'){
+					return 'link_' + n2.id + '_' + n1.id;
+              }else{
+              	return 'link_' + n1.id + '_' + n2.id;
+              }
+            } 
+  		  // for each nodes
+      	  n[versus].forEach(function(ix){
+          	  var tn = json.nodes[ix];
+          	  var lid = mklinkid(versus, n, tn);
+          	  var nid = 'node_' + tn.id;
+          	  remainingNodes.push(tn);
+          	  ;;(activate) ? classOn(lid, clazz + '_1') : classOff(lid, clazz + '_1');
+          	  ;;(activate) ? classOn(nid, clazz + '_1') : classOff(nid, clazz + '_1');
+      	  });
+      	  
+      	  while (remainingNodes.length) {
+      		  nextNodes = [];
+      		  remainingNodes.forEach(function(tn) {
+      		  	tn[versus].forEach(function(ix) {
+          		  var nn = json.nodes[ix];
+          		  var nid = 'node_' + nn.id;
+      			  nextNodes.push(nn);
+      			  var lid = mklinkid(versus, tn, nn);
+        		      ;;(activate) ? classOn(lid, clazz) : classOff(lid, clazz); 
+        		      ;;(activate) ? classOn(nid, clazz) : classOff(nid, clazz); 
+            		});
+      		  });
+      		  remainingNodes = nextNodes;
+            }
+		  }
+
+  	if(selectedConcept){
+	 	classOn('node_' + selectedConcept, 'concept');
+	 	highlight_path(selectedNode, 'top', 'conceptToTop', true);
+	 	highlight_path(selectedNode, 'bottom', 'conceptToBottom', true);
+	 }
+
+	 // setup lattice object to be accessed globally
+	 lattice.nodes = node[0];
+	 lattice.links = link[0];
+	 lattice.data = json;
+	 lattice.svg = svg;
+ });
+
+// FIXME the following two functions are needed because jquery addClass/removeClass seems to not work with SVG elements.
+function classOn(id, clazz){
+	// FIXME This is not the right way ...
+	if(!$("#"+id).attr("class").match(clazz)){
+		$("#"+id).attr("class", $("#"+id).attr("class") + " " + clazz);
+ 	}
+}
+function classOff(id, clazz){
+	// FIXME This is not the right way ...
+	if($("#"+id).attr("class")){
+ 		$("#"+id).attr("class", $("#"+id).attr("class").replace(new RegExp(clazz),''));
+	}
+}
+
+function highlightRelatedConcept(extent,intent){
+	if(extent.length === 0 && intent.length === 0) {
+		lattice.data.nodes.forEach(function(elem, idx){
+			var elid = $(elem.circle).attr('id');
+			classOff(elid,'highlighted');
+		});
+		return;
+ 	}
+	function arrayContainsAnotherArray(needle, haystack){
+		  for(var i = 0; i < needle.length; i++){
+		    if(haystack.indexOf(needle[i]) === -1)
+		       return false;
+		  }
+		  return true;
+		}
+	lattice.data.nodes.forEach(function(elem, idx){
+		var isext = arrayContainsAnotherArray(extent,elem.extent);
+		var isint = arrayContainsAnotherArray(intent,elem.intent);
+		var elid = $(elem.circle).attr('id');
+		if(isext && isint){
+			// highlight
+			classOn(elid,'highlighted');
+		}else{
+			// not highlight
+			classOff(elid,'highlighted');
+		}
+	});
+}
+
+        </script> 
+
+        <?php 
+        $red = '#ffAAAA';
+        $green = '#AAffAA';
+        $blue = '#AAAAff';
+        $red_1 = '#CC0000';
+        $green_1 = '#00CC00';
+        $blue_1 = '#0000CC';
+        ?>
+<style>
+text {
+	font: 10px sans-serif;
+}
+
+line {
+	stroke: #cccccc;
+	stroke-width: 2px;
+}
+
+body circle.selectedTop {
+	fill: <?php print $red; ?>;
+}
+body line.selectedTop {
+	stroke: <?php print $red; ?>;
+}
+
+body line.selectedBottom {
+	stroke: <?php print $blue; ?>;
+}
+body circle.selectedBottom {
+	fill: <?php print $blue; ?>;
+}
+
+body circle.selectedTop_1 {
+	fill: <?php print $red_1; ?>;
+}
+body line.selectedTop_1 {
+	stroke: <?php print $red_1; ?>;
+}
+
+body line.selectedBottom_1 {
+	stroke: <?php print $blue_1; ?>;
+}
+body circle.selectedBottom_1 {
+	fill: <?php print $blue_1; ?>;
+}
+
+circle {
+	cursor: pointer;
+	fill: #cccccc;
+	stroke: #fff;
+	stroke-width: 2px;
+}
+body circle.selected {
+	fill: #555;
+}
+circle.concept {
+	fill: <?php print $green_1; ?>;
+	stroke: <?php print $green_1; ?>;
+}
+
+
+circle.conceptToTop {
+	fill: <?php print $green; ?>;
+}
+line.conceptToTop {
+	stroke: <?php print $green; ?>;
+}
+circle.conceptToBottom {
+	fill: <?php print $green; ?>;
+}
+line.conceptToBottom {
+	stroke: <?php print $green; ?>;
+}
+
+circle.conceptToTop_1 {
+	fill: <?php print $green_1; ?>;
+}
+line.conceptToTop_1 {
+	stroke: <?php print $green_1; ?>;
+}
+circle.conceptToBottom_1 {
+	fill: <?php print $green_1; ?>;
+}
+line.conceptToBottom_1 {
+	stroke: <?php print $green_1; ?>;
+}
+
+circle.highlighted{
+	fill: #FF8C00;
+}
+#vis{
+	position: relative;
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+</style>

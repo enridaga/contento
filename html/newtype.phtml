@@ -1,0 +1,26 @@
+<form method="post" action="?" class="panel panel-default">
+	<input type="hidden" name="controller" value="items" /> <input
+		type="hidden" name="action" value="postnewtype" />
+		<!-- Default panel contents -->
+		<div class="panel-heading">New type</div>
+<!-- 		<div class="panel-body"></div> -->
+		<ul class="list-group">
+			<li class="list-group-item">
+				<div class="input-group">
+					<label class="input-group-addon" for="type">Name</label> <input
+						class="form-control" type="text" id="typeName" name="typeName" value="" />
+				</div>
+			</li>
+			<li class="list-group-item">
+				<div class="input-group">
+					<label class="input-group-addon" for="items">Items</label>
+					<textarea class="form-control" name="items" id="items"></textarea>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</li>
+		</ul>
+</form>

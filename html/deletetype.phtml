@@ -1,0 +1,9 @@
+<form action="">
+<input type="hidden" name="controller" value="items"/>
+<input type="hidden" name="action" value="postdeletetype"/>
+<button class="btn btn-danger" type="submit" name="delete" value="<?php $this->spit('typeId');?>">Delete collection</button>
+</form>
+<?php if(count($this->get('contexts')) > 0 ): ?>
+<?php $this->partial('listcontexts', $this->getAll()); ?>
+<?php endif; ?>
+<?php $this->partial('listitems', $this->getAll()); ?>

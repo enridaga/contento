@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->
+	<div class="panel-heading">Export profiles</div>
+	<div class="panel-body">
+		<p>List of export profiles</p>
+	</div>
+	<!-- Table -->
+	<table class="table">
+<!-- 		<thead> -->
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Description</th>
+			</tr>
+<!-- 		</thead> -->
+<!-- 		<tbody> -->
+			<?php foreach($this->get('profiles') as $profile ):?>
+			<tr>
+				<td>
+				<strong>
+				#<?php print $profile['id']; ?></strong>
+				<?php if(isset($profile['writable'])): ?>
+				<?php if($profile['writable']):?>
+				<span class="label label-success">editable</span>
+				<?php else: ?>
+				<span class="label label-warning">
+				read-only</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				</td>
+				<td>
+				<a
+					href="<?php print route('export', 'editprofile', array('profile' => $profile['id'])); ?>"><?php print $profile['name']; ?>
+				</a></td>
+				<td><?php print $profile['description']; ?></td>
+			</tr>
+			<?php endforeach; ?>
+<!-- 		</tbody> -->
+	</table>
+</div>

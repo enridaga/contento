@@ -1,0 +1,35 @@
+<form method="get" action="?" class="panel panel-default">
+	<input type="hidden" name="controller" value="export" />
+	<!-- Default panel contents -->
+	<div class="panel-heading">Export taxonomy as OWL ontology</div>
+	<ul class="list-group">
+		<li class="list-group-item"><label class="" for="taxonomy">Select taxonomy and export profile</label>
+			<div class="row">
+				<div class="col-lg-5">
+					<select class="form-control" id="taxonomy" name="taxonomy"> 
+        <?php foreach($this->get('taxonomies') as $taxonomy ): ?>
+				<option value="<?php print $taxonomy['id']; ?>">#<?php print $taxonomy['id']; ?> <?php print $taxonomy['name']; ?> - <?php print $taxonomy['concepts']; ?> concepts</option>
+        <?php endforeach; ?>
+				</select>
+				</div>
+				<div class="col-lg-5">
+					<select class="form-control" id="profile" name="profile"> 
+					<option value="0">Default</option>
+        <?php foreach($this->get('profiles') as $profile ): ?>
+				<option value="<?php print $profile['id']; ?>" >
+				#<?php print $profile['id']; ?> <?php print $profile['name']; ?></option>
+        <?php endforeach; ?>
+				</select>
+				</div>
+				<div class="col=lg-2">
+					<button type="submit" class="btn btn-success" name="action"
+						value="doexport">
+						Export <span class="glyphicon glyphicon-export"></span>
+					</button>
+				</div>
+			</div>
+		</li>
+
+	</ul>
+
+</form>

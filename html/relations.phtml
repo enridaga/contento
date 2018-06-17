@@ -1,0 +1,222 @@
+
+<form method="post" class="row relations-editor">
+	<input type="hidden" name="controller" value="contexts" /> <input
+		type="hidden" name="action" value="relations" /> <input type="hidden"
+		name="context"
+		value="<?php $context = $this->get('context'); print $context['id'];?>" />
+
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+			<strong><?php print $context['name']; ?></strong><br/>
+			<?php print $context['description']; ?>
+		</div>
+		<div class="panel-body row">
+
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<div class="input-group">
+					<label class="input-group-addon" for="filterObject">Object</label>
+					<select class="form-control" id="filterObject" name="filterObject">
+						<option value="">Any</option>
+						<?php foreach($this->get('objects') as $i): ?>
+						<option
+						<?php if($this->get('filterObject','') == $i['id']) print 'selected="selected"';?>
+							value="<?php print $i['id']; ?>">
+							<?php print $i['name']; ?>
+						</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="input-group">
+					<label class="input-group-addon" for="filterObject"><i>have attr</i>
+					</label> <select class="form-control" name="filterObjectHaving">
+						<option value="">Any</option>
+						<?php foreach($this->get('attributes') as $i): ?>
+						<option
+						<?php if($this->get('filterObjectHaving','') == $i['id']) print 'selected="selected"';?>
+							value="<?php print $i['id']; ?>">
+							<?php print $i['name']; ?>
+						</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="input-group">
+					<label class="input-group-addon" for="filterObjectMatches"><i>matches</i>
+					</label> <input class="form-control" type="text" name="filterObjectMatches" value="<?php print $this->get('filterObjectMatches', ''); ?>"/>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<div class="input-group">
+					<label class="input-group-addon" for="filterAttribute">Attribute</label>
+					<select class="form-control" id="filterAttribute"
+						name="filterAttribute">
+						<option value="">Any</option>
+						<?php foreach($this->get('attributes') as $i): ?>
+						<option
+						<?php if($this->get('filterAttribute','') == $i['id']) print 'selected="selected"';?>
+							value="<?php print $i['id']; ?>">
+							<?php print $i['name']; ?>
+						</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="input-group">
+					<label class="input-group-addon" for="filterAttributeHaving"><i>have
+							obj</i> </label> <select class="form-control"
+						name="filterAttributeHaving">
+						<option value="">Any</option>
+						<?php foreach($this->get('objects') as $i): ?>
+						<option
+						<?php if($this->get('filterAttributeHaving','') == $i['id']) print 'selected="selected"';?>
+							value="<?php print $i['id']; ?>">
+							<?php print $i['name']; ?>
+						</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="input-group">
+					<label class="input-group-addon" for="filterAttributeMatches"><i>matches</i>
+					</label> <input class="form-control" type="text" name="filterAttributeMatches" value="<?php print $this->get('filterAttributeMatches', ''); ?>"/>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+				<div class="input-group ">
+					<label class="input-group-addon" for="filterHolds">Holds</label> <select
+						class="form-control" id="filterHolds" name="filterHolds">
+						<option value="">Any</option>
+						<option value="true"
+						<?php if($this->get('filterHolds','') == 'true') print 'selected="selected"';?>>Holds</option>
+						<option value="false"
+						<?php if($this->get('filterHolds','') == 'false') print 'selected="selected"';?>>Not
+							Holds</option>
+						<option value="null"
+						<?php if($this->get('filterHolds','') == 'null') print 'selected="selected"';?>>To
+							Check</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+			<div class="btn-group btn-group-sm">
+				<button class="btn btn-default" type="submit" name="apply" value="1"><span class="glyphicon glyphicon-filter"></span>
+				<strong>(<?php print count($this->get('relations')) ?>)</strong>
+				</button>
+			</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="progress">
+			  <div title="<?php print $this->itemOf('statistics', 'true', 0); ?> Holds" class="progress-bar progress-bar-success" style="width: <?php print ( $this->itemOf('statistics', 'true', 0) * 100 / $this->itemOf('statistics', 'total', 0));?>%">
+			    <span><?php print $this->itemOf('statistics', 'true', 0); ?> Holds</span>
+			  </div>
+			  <div title="<?php print $this->itemOf('statistics', 'false', 0); ?> Not Holds" class="progress-bar progress-bar-warning" style="width: <?php print ( $this->itemOf('statistics', 'false', 0) * 100 / $this->itemOf('statistics', 'total', 0));?>%">
+			    <span><?php print $this->itemOf('statistics', 'false', 0); ?> Not Holds</span>
+			  </div>
+			  <div title="<?php print $this->itemOf('statistics', 'null', 0); ?> To Check" class="progress-bar progress-bar-info progress-bar-striped" style="width: <?php print ( $this->itemOf('statistics', 'null', 0) * 100 / $this->itemOf('statistics', 'total', 0));?>%">
+			    <span><?php print $this->itemOf('statistics', 'null', 0); ?> To Check</span>
+			  </div>
+			</div>
+		</div>
+		<!-- Table -->
+		<table class="table">
+			<thead>
+				<tr>
+					<?php if($this->get('canWrite')): ?>
+					<th><input type="checkbox" name="checkall" value="" onclick="$('input:checkbox[class=relid]').prop('checked', this.checked);"/></th>
+					<?php endif; ?>
+					<th>Relation</th>
+					<th><a href="<?php print route('items', 'list', array('type'=>$this->itemOf('context', 'objects'))); ?>">Objects</a></th>
+					<th><a href="<?php print route('items', 'list', array('type'=>$this->itemOf('context', 'attributes'))); ?>">Attributes</a></th>
+					<th>Holds</th>
+					<?php if($this->get('canWrite')): ?>
+					<th style="width:100px">
+					<div class="btn-group btn-group-xs">
+							<button type="submit" name="allholds"
+								value="true"
+								class="btn btn-success"
+								<?php if($this->get('filterHolds','') == 'true') print 'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-ok"></span>
+							</button>
+							<!--  -->
+							<button type="submit" name="allholds"
+								value="false"
+								class="btn btn-default"
+								<?php if($this->get('filterHolds','') == 'false') print  'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<!--  -->
+							<button type="submit" name="allholds"
+								value="null"
+								class="btn btn-primary"
+								<?php if($this->get('filterHolds','') == 'null') print  'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-check"></span>
+							</button>
+						</div>
+					</th>
+					<?php endif;?>
+				</tr>
+			</thead>
+			<tbody>
+				
+				<?php $relix = 0;?>
+				<?php $limit = $this->get('limit'); $rcount = 0;?>
+				<?php if(count($this->get('relations', array()))>$limit): ?>
+				<tr class="limit-reached"><td colspan="6" class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> Reached the limit of <?php print $limit; ?> rows displayed.</td></tr>
+				<?php endif; ?>
+				<?php foreach($this->get('relations') as $r ): ?>
+				<?php $rcount++; if($rcount>$limit): ?>
+				<tr class="limit-reached"><td colspan="6" class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> Reached the limit of <?php print $limit; ?> rows displayed.</td></tr>
+				<?php break; ?>
+				<?php endif; ?>
+				<tr class="relation">
+					<?php if($this->get('canWrite')): ?>
+					<td><input class="relid" type="checkbox" name="relid[<?php print $relix; ?>]" value="<?php print $r['id']; ?>"/></td>
+					<?php $relix++; ?>
+					<?php endif; ?>
+					<th>#<?php print $r['id']; ?></th>
+					<td>#<?php print $r['object'];?> <?php print $r['object_name'];?></td>
+					<td>#<?php print $r['attribute'];?> <?php print $r['attribute_name'];?></td>
+					<td><?php if($r['holds'] === NULL):  ?><span
+						class="label label-primary "><span
+							class="glyphicon glyphicon-check"></span></span> <?php endif;?>
+						<?php if($r['holds'] === 1):  ?><span class="label label-success "><span
+							class="glyphicon glyphicon-ok"></span></span> <?php endif;?> <?php if($r['holds'] === 0):  ?>
+						<?php endif;?></td>
+						<?php if($this->get('canWrite')): ?>
+					<td>
+						<div class="btn-group btn-group-xs">
+							<button type="submit" name="performholds"
+								value="<?php print $r['id']; ?>"
+								class="btn btn-success <?php if($r['holds'] === 1) print 'btn-active';  ?>"
+								<?php if($r['holds'] === 1) print 'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-ok"></span>
+							</button>
+							<!--  -->
+							<button type="submit" name="performnotholds"
+								value="<?php print $r['id']; ?>"
+								class="btn btn-default <?php if($r['holds'] === 0) print 'btn-active';  ?>"
+								<?php if($r['holds'] === 0) print  'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<!--  -->
+							<button type="submit" name="performunknown"
+								value="<?php print $r['id']; ?>"
+								class="btn btn-primary <?php if($r['holds'] === -1) print 'btn-active';  ?>"
+								<?php if($r['holds'] === NULL) print  'disabled="disabled"';  ?>>
+								<span class="glyphicon glyphicon-check"></span>
+							</button>
+						</div>
+					</td>
+						<?php endif;?>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</form>
+<script>
+$(document).ready(function(){
+	$('tr.relation td,tr.relation th').click(function(){
+			$(this).parent('tr').find('input[class=relid]').click();
+	});
+});
+</script>

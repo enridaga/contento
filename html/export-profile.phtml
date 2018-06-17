@@ -1,0 +1,155 @@
+<form method="post" action="?" class="panel panel-default">
+<input type="hidden" name="controller" value="export" />
+<input type="hidden" name="id" value="<?php print $this->get('id', 0);?>" />
+<?php $skip = $this->itemOf('profile','skip');?>
+<!-- Default panel contents -->
+<div class="panel-heading">Export profile</div>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<label for="namespace">Name</label>
+				<input class="form-control" type="text" id="name" name="name" value="<?php print $this->get('name','');?>" placeholder="Enter profile name"/>
+			</li>
+			<li class="list-group-item">
+				<label for="description">Description</label>
+				<textarea class="form-control" id="description" name="description" placeholder="Enter description"><?php print $this->get('description', '');?></textarea>
+			</li>
+			<li class="list-group-item">
+				<label for="namespace">Use namespace</label>
+				<input class="form-control" type="text" id="namespace" name="namespace" value="<?php print $this->itemOf('profile','namespace');?>" placeholder="http://www.example.org/contento/ns/"/>
+			</li>
+			<li class="list-group-item">
+				<label for="skipconceptlabelempty">Skip concepts when label is empty:</label>
+				Yes <input id="skipconceptlabelempty_Y" type="radio" name="skip[concept_label_empty]" value="1" <?php print ($skip['concept_label_empty'])?'checked':'';?>/>
+				No <input id="skipconceptlabelempty_N" type="radio" name="skip[concept_label_empty]" value="0" <?php print (!$skip['concept_label_empty'])?'checked':'';?>/>
+			</li>
+			<li class="list-group-item">
+				<label for="topclass" class="">A concept is an entity of type</label>
+				<input class="form-control" type="text" id="topclass" name="topclass" value="<?php print $this->itemOf('profile','topclass');?>" placeholder="http://www.example.org/contento/Concept"/>
+			</li>
+			<li class="list-group-item">
+				<label for="subClassOf" class="">Relate a concept with its parent with</label>
+				<input class="form-control" type="text" id="subClassOf" name="subClassOf" value="<?php print $this->itemOf('profile','subClassOf');?>" placeholder="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+			</li>
+			
+			<?php $types = $this->itemOf('profile','types'); ?>
+			<?php $addns = $this->itemOf('profile','addns'); ?>
+			<li class="list-group-item">
+				<label for="types[object]">Objects are</label>
+				<input type="radio" name="types[object]" value="uri" <?php print ($types['object'] == 'uri')?'checked':'';?> /> URIs
+				<input type="radio" name="types[object]" value="literal" <?php print ($types['object'] == 'literal')?'checked':'';?>/> Literals
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<label for="addns[object]">When URI, prepend namespace</label>
+				<input type="checkbox" name="addns[object]" value="1" <?php print ($addns['object'])?'checked':'';?>/>
+			</li>
+			<li class="list-group-item">
+				<label for="types[attribute]">Attributes are</label>
+				<input type="radio" name="types[attribute]" value="uri" <?php print ($types['attribute'] == 'uri')?'checked':'';?> /> URIs
+				<input type="radio" name="types[attribute]" value="literal" <?php print ($types['attribute'] == 'literal')?'checked':'';?> /> Literals
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<label for="addns[attribute]">When URI, prepend namespace</label>
+				<input type="checkbox" name="addns[attribute]" value="1" <?php print ($addns['attribute'])?'checked':'';?>/>
+			</li>
+			<li class="list-group-item">
+				<label for="class_to_attribute" class="col-lg-5">Relate each concept to each attribute using</label>
+    			<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="class_to_attribute" name="class_to_attribute" value="<?php print $this->itemOf('profile','class_to_attribute');?>" placeholder="http://www.example.org/contento/attribute"/>
+      			<span class="input-group-addon">
+				<input type="checkbox" name="skip[class_to_attribute]" value="1" <?php print ($skip['class_to_attribute'])?'checked':'';?>/> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label for="class_to_proper_attribute" class="col-lg-5">Relate each concept to each <i>proper</i> attribute using<br><small>A proper attribute is not present in any of the top concepts.</small></label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="class_to_proper_attribute" name="class_to_proper_attribute" value="<?php print $this->itemOf('profile','class_to_proper_attribute');?>" placeholder="http://www.example.org/contento/proper-attribute"/>
+				
+      			<span class="input-group-addon">
+				<input type="checkbox" name="skip[class_to_proper_attribute]" value="1" <?php print ($skip['class_to_proper_attribute'])?'checked':'';?>/> Skip
+				</span>
+				</div>				
+			</li>
+			<li class="list-group-item">
+				<label for="class_to_object" class="col-lg-5">Relate each concept to each object using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="class_to_object" name="class_to_object" value="<?php print $this->itemOf('profile','class_to_object');?>" placeholder="http://www.example.org/contento/object"/>
+      			<span class="input-group-addon">
+				<input type="checkbox" name="skip[class_to_object]" value="1" <?php print ($skip['class_to_object'])?'checked':'';?> /> Skip
+				</span>
+				</div>				
+			</li>
+			<li class="list-group-item">
+				<label for="class_to_proper_object" class="col-lg-5">Relate each concept to each <i>proper</i> object using<br><small>A proper attribute is not present in any of the bottom concepts.</small></label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="class_to_proper_object" name="class_to_proper_object" value="<?php print $this->itemOf('profile','class_to_proper_object');?>" placeholder="http://www.example.org/contento/proper-object"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[class_to_proper_object]" value="1" <?php print ($skip['class_to_proper_object'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item ">
+				<label for="object_to_class" class="col-lg-5">Relate an object (when URIs) to each concept using</label>
+				<div class="input-group">
+				<input class="form-control" type="text" id="object_to_class" name="object_to_class" value="<?php print $this->itemOf('profile','object_to_class');?>" placeholder="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[object_to_class]" value="1" <?php print ($skip['object_to_class'])?'checked':'';?>/> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label for="proper_object_to_class" class="col-lg-5">Relate a proper object (when URIs) to its concept using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="proper_object_to_class" name="proper_object_to_class" value="<?php print $this->itemOf('profile','proper_object_to_class');?>" placeholder="http://www.example.org/contento/proper-has-type"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[proper_object_to_class]" value="1" <?php print ($skip['proper_object_to_class'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label for="object_to_attribute" class="col-lg-5">Relate an object (when URIs) to each attribute using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="object_to_attribute" name="object_to_attribute" value="<?php print $this->itemOf('profile','object_to_attribute');?>" placeholder="http://www.example.org/contento/has"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[object_to_attribute]" value="1" <?php print ($skip['object_to_attribute'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label for="object_to_proper_attribute" class="col-lg-5">Relate an object (when URIs) to each proper attribute using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="object_to_proper_attribute" name="object_to_proper_attribute" value="<?php print $this->itemOf('profile','object_to_proper_attribute');?>" placeholder="http://www.example.org/contento/has-proper"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[object_to_proper_attribute]" value="1" <?php print ($skip['object_to_proper_attribute'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label for="proper_object_to_attribute" class="col-lg-5">Relate a proper object (when URIs) to each attribute using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="proper_object_to_attribute"  name="proper_object_to_attribute" value="<?php print $this->itemOf('profile','proper_object_to_attribute');?>" placeholder="http://www.example.org/contento/proper-has"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[proper_object_to_attribute]" value="1" <?php print ($skip['proper_object_to_attribute'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<label  for="proper_object_to_proper_attribute" class="col-lg-5">Relate a proper object (when URIs) to each proper attribute using</label>
+				<div class="input-group col-lg-7">
+				<input class="form-control" type="text" id="proper_object_to_proper_attribute"  name="proper_object_to_proper_attribute" value="<?php print $this->itemOf('profile','proper_object_to_proper_attribute');?>" placeholder="http://www.example.org/contento/proper-has-proper"/>
+				<span class="input-group-addon">
+				<input type="checkbox" name="skip[proper_object_to_proper_attribute]" value="1" <?php print ($skip['proper_object_to_proper_attribute'])?'checked':'';?> /> Skip
+				</span>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<button type="submit" class="btn btn-success" name="action"
+						value="postprofile">
+						Save <span class="glyphicon glyphicon-save"></span>
+				</button>
+				<button type="submit" class="btn btn-danger" name="action"
+						value="deleteprofile" onclick="return confirm('Are you sure you want to delete the profile?');">
+						Delete <span class="glyphicon glyphicon-trash"></span>
+				</button>				
+			</li>
+	</ul>
+</form>
+		

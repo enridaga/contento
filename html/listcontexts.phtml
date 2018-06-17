@@ -1,0 +1,46 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->
+	<div class="panel-heading">Contexts</div>
+	<div class="panel-body">
+		<p>List of contexts</p>
+	</div>
+	<!-- Table -->
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Context</th>
+				<th>Objects</th>
+				<th>Attributes</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($this->get('contexts') as $context ): ?>
+			<tr>
+				<td>
+				
+				<strong>
+				#<?php print $context['id']; ?></strong>
+				<?php if(isset($context['writable'])): ?>
+				<?php if($context['writable']):?>
+				<span class="label label-success">editable</span>
+				<?php else: ?>
+				<span class="label label-warning">
+				read-only</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				
+				<a
+					href="<?php print route('contexts', 'context', array('context' => $context['id'])); ?>"><?php print $context['name']; ?>
+				</a>
+				</td>
+				<td>#<?php print $context['objects']?> <a
+					href="<?php print route('items', 'list', array('type' => $context['objects'])); ?>"><?php print $context['objects_name']?>
+				</a></td>
+				<td>#<?php print $context['attributes']?> <a
+					href="<?php print route('items', 'list', array('type' => $context['attributes'])); ?>"><?php print $context['attributes_name']?>
+				</a></td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>

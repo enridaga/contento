@@ -1,0 +1,34 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->
+	<div class="panel-heading">Item collections</div>
+	<div class="panel-body">
+		<p>List of item collections.</p>
+	</div>
+	<!-- Table -->
+	<table class="table">
+		<?php foreach($this->get('types', array()) as $type): ?>
+		<tr>
+			<th style=""><span class="txt">#<?php print $type['id']; ?></span>
+				<?php if(isset($type['writable'])): ?>
+				<?php if($type['writable']):?>
+				<span class="label label-success">editable</span>
+				<?php else: ?>
+				<span class="label label-warning">
+				read-only</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				</th>
+			<td style="max-width:80%; min-width:50%"><a
+				href="<?php print route('items', 'list', array('type' => $type['id'])); ?>">
+				<?php print $type['name']; ?>
+			</a></td>
+			<td>
+			<?php if($type['writable']):?>
+				<a class="btn btn-xs btn-primary" href="<?php print route('items', 'additems', array('type'=> $type['id']));?>" title="Add items"><i class="glyphicon glyphicon-plus"></i></a>
+				<a class="btn btn-xs btn-danger" href="<?php print route('items', 'deletetype', array('type'=> $type['id']));?>" title="Delete"><i class="glyphicon glyphicon-trash"></i></a>
+			<?php endif; ?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>

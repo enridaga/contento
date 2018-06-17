@@ -1,0 +1,57 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="<?php print route(); ?>">contento</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Items <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+			            <li><a href="<?php print route('items', 'types'); ?>"><i class="glyphicon glyphicon-list"></i>&nbsp;Collections</a></li>
+			            <li><a href="<?php print route('items', 'newtype'); ?>"><i class="glyphicon glyphicon-plus"></i>&nbsp;New collection</a></li>
+			            <li><a href="<?php print route('items', 'additems'); ?>"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add items</a></li>
+			        </ul>
+				</li>
+				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Contexts <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="<?php print route('contexts','list'); ?>"><i class="glyphicon glyphicon-list"></i>&nbsp;Contexts</a></li>
+		            <li><a href="<?php print route('contexts','new'); ?>"><i class="glyphicon glyphicon-plus"></i>&nbsp;New context</a></li>
+		            <li class="divider"></li>
+		            <li><a href="<?php print route('contexts','import'); ?>"><i class="glyphicon glyphicon-import"></i>&nbsp;Import</a></li>
+		            <li><a href="<?php print route('contexts','export'); ?>"><i class="glyphicon glyphicon-export"></i>&nbsp;Export</a></li>
+		          </ul>
+		        </li>
+				<li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Taxonomies <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="<?php print route('taxonomies','list'); ?>"><i class="glyphicon glyphicon-list"></i>&nbsp;Taxonomies</a></li>
+		            <li class="divider"></li>
+		            <li><a href="<?php print route('export','export'); ?>"><i class="glyphicon glyphicon-export"></i>&nbsp;Export</a></li>
+		            <li><a href="<?php print route('export','list'); ?>"><i class="glyphicon glyphicon-transfer"></i>&nbsp;Export profiles</a></li>
+		            <li><a href="<?php print route('export','newprofile'); ?>"><i class="glyphicon glyphicon-plus"></i>&nbsp;New export profile</a></li>
+		          </ul>
+		        </li>
+			</ul>
+			<?php if($this->has('user')): ?>
+			<?php $u = $this->get('user'); ?>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Signed in as <strong><?php print $u['name']?></strong> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+			            <li><a href="<?php print route('default', 'logout'); ?>">Logout</a></li>
+			        </ul>
+				</li>
+			</ul>
+				
+			<?php endif; ?>
+		</div>
+		<!--/.nav-collapse -->
+	</div>
+</nav>

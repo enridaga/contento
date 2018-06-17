@@ -1,0 +1,34 @@
+<form method="post" action="?" class="panel panel-default">
+	<input type="hidden" name="controller" value="items" /> <input
+		type="hidden" name="action" value="postitems" />
+		<!-- Default panel contents -->
+		<div class="panel-heading">Add items</div>
+<!-- 		<div class="panel-body"></div> -->
+		<ul class="list-group">
+			<li class="list-group-item">
+				<label class="" for="type">Collection</label> 
+				<?php if(!$this->has('type')): ?>
+				<select
+					class="form-control" id="type" name="type"  >
+					<?php foreach($this->get('types') as $type): ?>
+					<option 
+					value="<?php print $type['id'];?>"><?php print $type['name']; ?></option>
+					<?php endforeach; ?>
+					</select>
+				<?php else: ?>
+				<?php $type = $this->get('type'); print $type['name']; ?>
+				<input type="hidden" name="type" value="<?php print $type['id']; ?>"/>
+				<?php endif; ?>
+			</li>
+			<li class="list-group-item">
+				<label  for="items">Items to add</label>
+				<textarea class="form-control" name="items" id="items"></textarea>
+				<small>One per line</small>
+			</li>
+			<li class="list-group-item">
+				<div>
+					<button type="submit" class="btn btn-success">Submit</button>
+				</div>
+			</li>
+		</ul>
+</form>

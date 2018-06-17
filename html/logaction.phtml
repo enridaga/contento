@@ -1,0 +1,46 @@
+<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">Log Action #<?php print $this->itemOf('logaction', 'id'); ?></div>
+		<div class="panel-body">
+		<p>Time: <?php print $this->itemOf('logaction', 'time'); ?></p>
+		<p>Context: <?php print $this->itemOf('context', 'name'); ?></p>
+		<p>User: <?php print $this->itemOf('logaction', 'username'); ?></p>
+		<p><?php print $this->itemOf('logaction', 'changes'); ?> relation(s). 
+		</p>
+		<form action="<?php print route('logs', 'revert', array('context' => $this->itemOf('context', 'id'), 'logaction' => $this->itemOf('logaction', 'id'))); ?>" method="post">
+			<p><button type="submit" <?php if(!$this->get('canRevert', FALSE)){ print 'disabled'; }?> class="btn btn-primary" onclick="return confirm('Are you sure you want to set all the relations to the \'was\' value?')">Revert change</button></p>
+		</form>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>#ID</th>
+					<th>Object</th>
+					<th>Attribute</th>
+					<th>Was</th>
+					<th>Is</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php foreach($this->get('logchanges') as $change): ?>
+			<tr>
+				<td><?php print $change['id']; ?></td>
+				<td><?php print $change['object_name']; ?></td>
+				<td><?php print $change['attribute_name']; ?></td>
+				<td>
+				<span class="glyphicon glyphicon-<?php 
+			if ( $change['was'] === 1)  print 'ok';
+			if ( $change['was'] === 0)  print 'remove';
+			if ( $change['was'] === NULL)  print 'check'; 
+		?>"></span>
+				</td>
+				<td><span class="glyphicon glyphicon-<?php 
+			if ( $change['is'] === 1)  print 'ok';
+			if ( $change['is'] === 0)  print 'remove';
+			if ( $change['is'] === NULL)  print 'check'; 
+		?>"></span></td>
+			</tr>
+			<?php endforeach; ?>
+			</tbody>
+			</table>
+</div>

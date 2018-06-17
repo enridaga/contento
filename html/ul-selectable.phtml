@@ -1,0 +1,8 @@
+<ul class="selectable features">
+	<?php foreach($this->get('proper',array()) as $p): ?>
+	<li class="proper"><?php print $p; ?></li>
+	<?php endforeach; ?>
+	<?php foreach($this->get('inherited',array()) as $i): ?>
+	<li class="inherited"><?php print $i; ?></li>
+	<?php endforeach; ?>
+</ul>

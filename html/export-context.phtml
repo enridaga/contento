@@ -1,0 +1,27 @@
+<form method="post" action="?" class="panel panel-default">
+	<input type="hidden" name="controller" value="items" /> <input
+		type="hidden" name="action" value="postnewtype" />
+		<!-- Default panel contents -->
+		<div class="panel-heading">Export context</div>
+<!-- 		<div class="panel-body"></div> -->
+		<!-- Table -->
+	<table class="table">
+<!-- 		<thead> -->
+			<tr>
+				<th>Context</th>
+				<th></th>
+			</tr>
+<!-- 		</thead> -->
+<!-- 		<tbody> -->
+			<?php foreach($this->get('contexts') as $context ): ?>
+			<tr>
+				<td>#<?php print $context['id']; ?>
+				<a
+					href="<?php print route('contexts', 'context', array('context' => $context['id'])); ?>"><?php print $context['name']; ?>
+				</a></td>
+				<td><a href="<?php print route('contexts', 'doexport', array('context' => $context['id'])); ?>" class="btn btn-default">Export <span class="glyphicon glyphicon-export"></span></a></td>
+			</tr>
+			<?php endforeach; ?>
+<!-- 		</tbody> -->
+	</table>
+</form>

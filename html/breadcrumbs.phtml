@@ -1,0 +1,7 @@
+<?php if($this->full('breadcrumbs')): ?>
+<ol class="breadcrumb">
+<?php foreach($this->get('breadcrumbs', array()) as $label => $href): ?>
+  <li><a class="<?php ($label == $this->get('active','')) ? print 'active' : '' ?>" href="<?php print $href; ?>"><?php print $label; ?></a></li>
+ <?php endforeach; ?>
+</ol>
+<?php endif; ?>

@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Items in collection <?php print $this->get('type');?></div>
+  <div class="panel-body">
+    <p>List of items</p>
+  </div>
+  <!-- Table -->
+  <table class="table">
+<?php foreach($this->get('items') as $i): ?>
+<tr><th><span class="txt">#<?php print $i['id']; ?></span></th>
+<td><span class="txt"><?php print $i['name']; ?></span></td>
+</tr>
+<?php endforeach; ?>
+  </table>
+</div>

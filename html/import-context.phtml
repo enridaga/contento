@@ -1,0 +1,63 @@
+<form method="post" action="?" class="panel panel-default"
+	enctype="multipart/form-data">
+	<input type="hidden" name="controller" value="contexts" /> <input
+		type="hidden" name="action" value="doimport" />
+	<!-- Default panel contents -->
+	<div class="panel-heading">Import context from CSV</div>
+	<!-- 		<div class="panel-body"></div> -->
+	<ul class="list-group">
+
+		<li class="list-group-item ">
+			<div class="row">
+				<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12"
+					for="contextName">Context name</label> <input
+					class=" col-lg-4 col-md-4 col-sm-4 col-xs-12 " type="text"
+					name="contextName" />
+			</div>
+		</li>
+	
+		<li class="list-group-item ">
+			<div class="row">
+				<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12"
+					for="objectTypeName">Object type name</label> <input
+					class=" col-lg-4 col-md-4 col-sm-4 col-xs-12 " type="text"
+					name="objectTypeName" />
+			</div>
+		</li>
+	
+		<li class="list-group-item ">
+			<div class="row">
+				<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12"
+					for="attributeTypeName">Attribute type name</label>
+				<div class=" col-lg-4 col-md-4 col-sm-4 col-xs-12 input-group">
+					<input class="form-control" type="text" name="attributeTypeName"
+						id="attributeTypeName" /> <span class="input-group-addon"><input
+						type="checkbox"
+						value="checked"
+						onclick="(this.checked) ? $('#attributeTypeName').attr('disabled','disabled') : $('#attributeTypeName').removeAttr('disabled','disabled');"
+						name="attributeTypeSameAsObjectType" /> same as the object type</span>
+				</div>
+			</div>
+		</li>
+
+		<li class="list-group-item">
+			<div class="row">
+				<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12"
+					for="importFileInput">CSV file</label>
+				<div class="input-group">
+					<input type="file" name="file" id="importFileInput" />
+				</div>
+			</div>
+		</li>
+		<li class="list-group-item">
+			<div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</div>
+		</li>
+	</ul>
+</form>
+<script>
+$(document).ready(function(){
+	$('#importFileInput').bootstrapFileInput();
+});
+</script>
